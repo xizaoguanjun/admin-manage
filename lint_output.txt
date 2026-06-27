@@ -1,0 +1,55 @@
+
+> duojing-basic-admin@1.0.0 lint:eslint E:\qinhui\cnb\duojing-basic-admin
+> eslint --cache --max-warnings 0  "{src,build}/**/*.{vue,js,ts,tsx}" --fix
+
+
+E:\qinhui\cnb\duojing-basic-admin\src\api\common.ts
+  48:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\qinhui\cnb\duojing-basic-admin\src\composables\useDisableNumberInputStepValidation.ts
+  1:23  error  'nextTick' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\qinhui\cnb\duojing-basic-admin\src\store\modules\selectOptions.ts
+   8:10  error  'http' is defined but never used. Allowed unused vars must match /^_/u                @typescript-eslint/no-unused-vars
+  17:7   error  'PROXY_URL' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\qinhui\cnb\duojing-basic-admin\src\utils\async.ts
+   6:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   6:66  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  10:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  10:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\qinhui\cnb\duojing-basic-admin\src\utils\formatUtils.ts
+   58:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   85:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\qinhui\cnb\duojing-basic-admin\src\utils\global.ts
+  89:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  91:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\qinhui\cnb\duojing-basic-admin\src\utils\json.ts
+  59:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  84:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\qinhui\cnb\duojing-basic-admin\src\utils\sso.ts
+  17:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\qinhui\cnb\duojing-basic-admin\src\views\small-store\hooks\useChildRegions.ts
+  13:63  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  65:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  77:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\qinhui\cnb\duojing-basic-admin\src\views\small-store\hooks\useCommercialArea.ts
+  29:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\qinhui\cnb\duojing-basic-admin\src\views\small-store\services.ts
+  448:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  458:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  474:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  486:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 25 problems (25 errors, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

@@ -1,0 +1,35 @@
+/**
+ * Element Plus 基础主题变量定制文件
+ *
+ * 职责：通过 SCSS 变量覆盖 Element Plus 的基础主题（变量级别）
+ * - 颜色、字体、尺寸等基础变量的覆盖
+ * - 引入 Element Plus 源码样式
+ *
+ * 注意：项目特定的组件样式定制请在 element-plus.scss 中进行
+ *
+ * 官方文档: https://element-plus.org/zh-CN/guide/theming.html
+ */
+
+// 使用 @forward 覆盖 Element Plus 的 SCSS 变量（仅覆盖支持 !default 的变量）
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  // 文字颜色
+  $text-color: (
+      "primary": #000,
+      "regular": #000,
+      "secondary": #606266,
+      "placeholder": #a8abb2,
+      "disabled": #c0c4cc
+    )
+);
+
+// 引入 Element Plus 的完整样式（基于上面覆盖的变量编译）
+@use "element-plus/theme-chalk/src/index.scss" as *;
+
+// 使用 CSS 变量进行额外的主题微调
+// 注意：在 qiankun 微前端环境下，这些变量可能会影响主应用
+// 使用 :where() 降低优先级，让主应用的变量优先
+:where(:root) {
+  /* Element Plus 字体相关 - 使用 :where 降低优先级 */
+  --el-font-weight-primary: 500;
+  --el-fill-color-light: #f7f7ff;
+}

@@ -1,0 +1,198 @@
+// 重写 plus-page 默认样式
+.plus-page {
+  // 全局自适应高度配置 - 让表格自动占满剩余空间
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  // 搜索区域卡片 - 不占用多余空间
+  > .el-card:not(.plus-page__table_wrapper) {
+    flex-shrink: 0;
+  }
+
+  .el-card {
+    border-radius: 8px;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .plus-page__table_wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-top: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      margin 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    // 让表格卡片自动占满高度
+    &.el-card {
+      display: flex !important;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+
+      .el-card__body {
+        display: flex !important;
+        flex: 1;
+        flex-direction: column;
+        overflow: hidden;
+      }
+    }
+
+    // 让表格容器自动占满高度（表格内容可滚动）
+    .plus-table {
+      display: flex !important;
+
+      // flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+
+      .el-table {
+        overflow: auto !important;
+      }
+    }
+
+    // 分页器固定在底部
+    .plus-pagination {
+      flex-shrink: 0;
+      padding-top: 16px;
+      padding-bottom: 0;
+      background-color: var(--el-bg-color);
+    }
+
+    .el-input-number.is-without-controls .el-input__wrapper {
+      padding-right: 12px;
+      padding-left: 12px;
+    }
+  }
+
+  // 所有子元素都应用过渡效果
+  > * {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // 搜索表单过渡动画 - 解决显示/隐藏时的闪烁问题
+  .plus-search {
+    overflow: visible; // 改为 visible，避免内容被裁剪
+    transition: all 0.3s ease-in-out;
+
+    .el-col {
+      padding-right: 0 !important;
+    }
+
+    .plus-search__button__wrapper.el-form-item {
+      margin-right: 0;
+    }
+  }
+
+  // 针对搜索卡片的过渡效果
+  .plus-page__search {
+    transform-origin: top;
+    transition:
+      opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      margin 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.el-card {
+      animation: fade-in 0.3s ease-in-out;
+    }
+  }
+
+  // 当搜索卡片存在时，表格容器增加顶部间距（搜索卡片是第一个 el-card，表格容器是第二个）
+  > .el-card:not(.plus-page__table_wrapper) + .plus-page__table_wrapper {
+    margin-top: 8px;
+  }
+
+  // 全局控制搜索按钮靠右显示
+  .plus-search-footer {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  // 搜索表单列右侧内边距
+  .plus-search .el-col {
+    padding-right: 24px;
+  }
+}
+
+// plus-dialog 表单样式（按需添加）
+// .plus-dialog .plus-form {
+//   .el-form-item__content {
+//     flex: none !important;
+//   }
+// }
+
+// 淡入动画
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**
+ * ReSelectV2 最大高度限制
+ * @description 限制多选标签区域的最大高度，超出后显示滚动条
+ * @usage 在 ReSelectV2 组件上添加 class="re-select-v2-max-height"
+ * @config 可通过 CSS 变量 --re-select-max-height 自定义高度，默认 160px
+ * @example
+ *   h(ReSelectV2, {
+ *     class: "re-select-v2-max-height",
+ *     // 或自定义高度
+ *     style: { "--re-select-max-height": "200px" }
+ *   })
+ */
+.re-select-v2-max-height {
+  // 外层容器设置相对定位，供内部元素参考
+  position: relative;
+
+  .el-select__wrapper {
+    // 移除 wrapper 右侧的内边距，让 selection 能扩展
+    padding-right: 0;
+  }
+
+  .el-select__selection {
+    max-height: var(--re-select-max-height, 160px);
+    overflow-y: auto;
+    width: 100%;
+    // 右侧增加 padding，为滚动条预留空间
+    padding-right: 8px;
+
+    // 自定义滚动条样式
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--el-border-color-darker, #c0c4cc);
+      border-radius: 3px;
+
+      &:hover {
+        background: var(--el-border-color-extra-dark, #909399);
+      }
+    }
+  }
+
+  // 将清除按钮等后缀元素绝对定位到右侧
+  .el-select__suffix {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

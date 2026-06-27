@@ -1,0 +1,40 @@
+{
+  "Version": "6.1.0",
+  "Title": "",
+  "FixedHeader": true,
+  "HiddenSideBar": false,
+  "MultiTagsCache": false,
+  "KeepAlive": true,
+  "Locale": "zh",
+  "Layout": "vertical",
+  "Theme": "saucePurple",
+  "DarkMode": false,
+  "OverallStyle": "system",
+  "Grey": false,
+  "Weak": false,
+  "HideTabs": false,
+  "HideFooter": false,
+  "Stretch": false,
+  "SidebarStatus": true,
+  "EpThemeColor": "#409EFF",
+  "ShowLogo": true,
+  "ShowModel": "smart",
+  "MenuArrowIconNoTransition": false,
+  "CachingAsyncRoutes": false,
+  "TooltipEffect": "light",
+  "ResponsiveStorageNameSpace": "responsive-v2-",
+  "MenuSearchHistory": 6,
+  "CDN": {
+    "base": "https://staticcdn.jinbizhihui.com",
+    "images": "https://staticcdn.jinbizhihui.com/images/data-center-admin",
+    "fonts": "https://staticcdn.jinbizhihui.com/fonts"
+  },
+  "MapConfigure": {
+    "amapKey": "adc139d56406f3844c8f1cf1c6b65c41",
+    "options": {
+      "resizeEnable": true,
+      "center": [113.6401, 34.72468],
+      "zoom": 12
+    }
+  }
+}

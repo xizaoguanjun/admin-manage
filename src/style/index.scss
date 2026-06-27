@@ -1,0 +1,88 @@
+@use "fonts";
+@use "theme";
+@use "transition";
+@use "element-plus";
+@use "plus-pro-components";
+@use "sidebar";
+@use "dark";
+
+/* 自定义全局 CssVar */
+/* 使用 :where(:root) 降低优先级，避免在 qiankun 微前端环境下覆盖主应用变量 */
+:where(:root) {
+  --el-upload-dragger-padding-horizontal: 24px !important;
+  --el-upload-dragger-padding-vertical: 24px !important;
+  --el-dialog__title-font-size: 16px !important;
+  --el-dialog__title-color: #000 !important;
+  --el-dialog__title-font-weight: 500 !important;
+  --el-form-item-label-width: 140px !important;
+  --el-form-item__dialog-width: 360px !important;
+  --el-form-item__drawer-width: 100% !important;
+  --el-button-margin-left: 16px !important;
+  --el-drawer-padding-primary: 24px !important; // 抽屉padding
+  --el-textarea__inner-height: 110px !important;
+  --el-dialog-margin-top: 24px;
+
+  /* element-plus 字体颜色 */
+  --el-text-color-regular: #000 !important;
+  --el-font-weight-primary: 400 !important;
+
+  /* 左侧菜单展开、收起动画时长 */
+  --pure-transition-duration: 0.3s;
+
+  /* 常用border-color 需要时可取用 */
+  --pure-border-color: transparent;
+
+  /* switch关闭状态下的color 需要时可取用 */
+  --pure-switch-off-color: #a6a6a6;
+
+  /** 黑色透明度变量 - 用于菜单文本层级 */
+  --pure-black-10: rgb(0 0 0 / 10%);
+  --pure-black-20: rgb(0 0 0 / 20%);
+  --pure-black-30: rgb(0 0 0 / 30%);
+  --pure-black-40: rgb(0 0 0 / 40%);
+  --pure-black-50: rgb(0 0 0 / 50%);
+  --pure-black-60: rgb(0 0 0 / 60%);
+  --pure-black-70: rgb(0 0 0 / 70%);
+  --pure-black-80: rgb(0 0 0 / 80%);
+  --pure-black-90: rgb(0 0 0 / 90%);
+  --pure-black-100: rgb(0 0 0 / 100%);
+
+  /** 主题色 - 默认使用 saucePurple 深紫罗兰色 */
+  --pure-theme-sub-menu-active-text: #fff; /* 激活菜单：白色 */
+  --pure-theme-menu-bg: transparent;
+  --pure-theme-menu-hover: rgb(255 255 255 / 10%);
+  --pure-theme-sub-menu-bg: transparent;
+  --pure-theme-menu-text: var(--pure-black-70); /* 第一层菜单：黑色70% */
+  --pure-theme-sub-menu-text: var(--pure-black-50); /* 第二层菜单：黑色50% */
+  --pure-theme-sidebar-logo: transparent;
+  --pure-theme-menu-title-hover: var(--el-color-primary);
+  --pure-theme-menu-active-before: #fff;
+
+  /** 背景渐变色 - 默认使用 saucePurple 深紫罗兰色渐变 */
+  --pure-bg-gradient-start: #9469fd;
+  --pure-bg-gradient-end: #326bfd;
+  --pure-bg-gradient-opacity: 0.15;
+
+  /** 按钮渐变色 - Primary 按钮背景渐变 */
+  --pure-button-primary-gradient-start: #386bfd;
+  --pure-button-primary-gradient-end: #7b52fe;
+
+  /** 表格表头背景色 */
+  --pure-table-header-bg: #f7f7f7;
+}
+
+/* 灰色模式 */
+.html-grey {
+  filter: grayscale(100%);
+}
+
+/* 色弱模式 */
+.html-weakness {
+  filter: invert(80%);
+}
+.yc-tabs-header{
+  height: 100%;
+  .yc-tabs-with-filter{
+    height: 100%;
+  }
+}

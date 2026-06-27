@@ -1,0 +1,533 @@
+/**
+ * Element Plus 组件样式扩展文件
+ *
+ * 职责：项目特定的 Element Plus 组件样式定制（组件级别）
+ * - 自定义按钮渐变样式
+ * - 自定义分页器样式
+ * - 自定义对话框、消息框等组件样式
+ * - 针对具体组件的细节调整
+ *
+ * 注意：基础主题变量（颜色、字体等）的修改请在 element-variables.scss 中进行
+ */
+.audit-text {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: rgb(0 0 0 / 50%);
+  text-align: left;
+}
+/**
+dialog相关 开始 ------------------------------------------------------------
+*/
+.el-dialog {
+  padding: 16px 24px;
+  margin-top: 6vh !important;
+  border-radius: 8px !important;
+}
+
+/* 垂直居中的对话框样式 - 当使用 align-center 时移除 margin-top */
+.el-overlay-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.el-dialog--center,
+.is-align-center {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.plus-dialog-body {
+  margin-top: 24px !important;
+  // margin-bottom: 24px !important;
+}
+
+// .el-dialog__body {
+//   margin-top: 24px !important;
+// }
+
+.el-textarea__inner {
+  height: var(--el-textarea__inner-height) !important;
+}
+
+.el-dialog__title {
+  font-size: var(--el-dialog__title-font-size) !important;
+  font-weight: var(--el-dialog__title-font-weight) !important;
+  color: var(--el-dialog__title-color) !important;
+}
+
+/**
+ * YcDialog/ReDialog 固定高度和滚动条样式
+ * 确保使用 yc-pro-components 的 ReDialog 组件有正确的固定高度和滚动条
+ * 注意：实际 DOM 中的类名是 plus-dialog，不是 yc-dialog
+ */
+.plus-dialog.el-dialog,
+.el-dialog.plus-dialog {
+  display: flex;
+  flex-direction: column;
+  max-height: var(--yc-dialog-max-height, 720px);
+  margin: 6vh auto 50px !important;
+
+  .el-dialog__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0 !important;
+  }
+
+  .el-dialog__footer,
+  .plus-dialog-footer {
+    flex-shrink: 0;
+  }
+}
+
+// yc-dialog 内容区域样式
+.yc-dialog__content {
+  flex: 1;
+  padding: 0;
+  overflow: visible;
+  min-height: 0;
+}
+
+/**
+dialog相关 结束 ------------------------------------------------------------
+*/
+
+/**
+upload相关 开始 ------------------------------------------------------------
+*/
+
+/* 覆盖 Element Plus 在 .el-upload 上定义的 CSS 变量 */
+
+/* Element Plus 在 .el-upload 上定义了这些变量，需要在这里覆盖才能生效 */
+.el-upload {
+  --el-upload-dragger-padding-horizontal: var(
+    --el-upload-dragger-padding-horizontal,
+    24px
+  ) !important;
+  --el-upload-dragger-padding-vertical: var(
+    --el-upload-dragger-padding-vertical,
+    24px
+  ) !important;
+}
+
+.el-upload-dragger {
+  padding: var(--el-upload-dragger-padding-vertical, 24px)
+    var(--el-upload-dragger-padding-horizontal, 24px)
+    var(--el-upload-dragger-padding-vertical, 24px)
+    var(--el-upload-dragger-padding-horizontal, 24px) !important;
+}
+
+/**
+upload相关 结束 ------------------------------------------------------------
+*/
+
+.el-form-item__label {
+  font-weight: 400;
+}
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+// .el-dropdown-menu:not(.tree-dropdown-menu) {
+//   padding: 0 !important;
+// }
+
+.is-dark {
+  z-index: 9999 !important;
+}
+
+/* 重置 el-button 中 icon 的 margin */
+.reset-margin [class*="el-icon"] + span {
+  margin-left: 2px !important;
+}
+
+/* 自定义 popover 的类名 */
+.pure-popper {
+  padding: 0 !important;
+}
+
+/* nprogress 适配 element-plus 的主题色 */
+#nprogress {
+  & .bar {
+    background-color: var(--el-color-primary) !important;
+  }
+
+  & .peg {
+    box-shadow:
+      0 0 10px var(--el-color-primary),
+      0 0 5px var(--el-color-primary) !important;
+  }
+
+  & .spinner-icon {
+    border-top-color: var(--el-color-primary);
+    border-left-color: var(--el-color-primary);
+  }
+}
+
+.pure-dialog {
+  .el-dialog__header.show-close {
+    padding-right: 16px;
+  }
+
+  .pure-dialog-svg {
+    color: var(--el-color-info);
+  }
+
+  .el-dialog__footer {
+    padding-top: 0;
+  }
+}
+
+.el-icon {
+  &.el-tour__close,
+  &.el-dialog__close,
+  &.el-drawer__close,
+  &.el-message-box__close,
+  &.el-notification__closeBtn,
+  .el-upload-list__item.is-ready &.el-icon--close {
+    width: 24px;
+    height: 24px;
+    outline: none;
+    border-radius: 4px;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    &:hover {
+      color: rgb(0 0 0 / 88%) !important;
+      text-decoration: none;
+      background-color: rgb(0 0 0 / 6%);
+
+      .pure-dialog-svg {
+        color: rgb(0 0 0 / 88%) !important;
+      }
+    }
+  }
+}
+
+.el-form-item {
+  margin-bottom: 24px;
+}
+
+// 自定义el-button间距 默认为16px
+.el-button + .el-button {
+  margin-left: var(--el-button-margin-left);
+}
+
+/* 克隆并自定义 ElMessage 样式，不会影响 ElMessage 原本样式，在 src/utils/message.ts 中调用自定义样式 ElMessage 方法即可，整体暗色风格在 src/style/dark.scss 文件进行了适配 */
+.pure-message {
+  background: #fff !important;
+  border-width: 0 !important;
+  box-shadow:
+    0 3px 6px -4px #0000001f,
+    0 6px 16px #00000014,
+    0 9px 28px 8px #0000000d !important;
+
+  & .el-message__content {
+    color: #000000d9 !important;
+    pointer-events: all !important;
+    background-image: initial !important;
+  }
+
+  & .el-message__closeBtn {
+    outline: none;
+    border-radius: 4px;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    &:hover {
+      background-color: rgb(0 0 0 / 6%);
+    }
+  }
+}
+
+/* 自定义菜单搜索样式 */
+.pure-search-dialog {
+  @media screen and (width > 760px) and (width <= 940px) {
+    .el-input__inner {
+      font-size: 12px;
+    }
+  }
+
+  @media screen and (width <= 470px) {
+    .el-input__inner {
+      font-size: 12px;
+    }
+  }
+
+  .el-dialog__header {
+    display: none;
+  }
+
+  .el-input__inner {
+    font-size: 1.2em;
+  }
+}
+
+/* 仿 el-scrollbar 滚动条样式，支持大多数浏览器，如Chrome、Edge、Firefox、Safari等。整体暗色风格在 src/style/dark.scss 文件进行了适配 */
+.pure-scrollbar {
+  scrollbar-color: rgb(221 222 224) transparent; /* 滑块颜色、轨道颜色 */
+
+  /* Firefox */
+  scrollbar-width: thin; /* 可选值为 'auto', 'thin', 'none' */
+  ::-webkit-scrollbar {
+    width: 6px; /* 滚动条宽度 */
+  }
+
+  /* 滚动条轨道 */
+  ::-webkit-scrollbar-track {
+    background: transparent; /* 轨道颜色 */
+  }
+
+  /* 滚动条滑块 */
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(221 222 224);
+    border-radius: 4px;
+  }
+
+  /* 滚动条滑块：hover状态 */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(199 201 203); /* 滑块hover颜色 */
+  }
+}
+
+/* Primary 按钮渐变样式 - 排除 link 和 plain 类型 */
+.el-button--primary:not(.is-link, .is-plain) {
+  background: linear-gradient(
+    90deg,
+    var(--pure-button-primary-gradient-start) 0%,
+    var(--pure-button-primary-gradient-end) 100%
+  ) !important;
+  border: none !important;
+
+  &:hover,
+  &:focus {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--pure-button-primary-gradient-start), white 15%)
+        0%,
+      color-mix(in srgb, var(--pure-button-primary-gradient-end), white 15%)
+        100%
+    ) !important;
+  }
+
+  &:active {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--pure-button-primary-gradient-start), black 10%)
+        0%,
+      color-mix(in srgb, var(--pure-button-primary-gradient-end), black 10%)
+        100%
+    ) !important;
+  }
+
+  &.is-disabled,
+  &.is-disabled:hover,
+  &.is-disabled:focus,
+  &.is-disabled:active {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--pure-button-primary-gradient-start), white 50%)
+        0%,
+      color-mix(in srgb, var(--pure-button-primary-gradient-end), white 50%)
+        100%
+    ) !important;
+  }
+}
+
+/* Plain 按钮 hover 时应用渐变 */
+.el-button--primary.is-plain {
+  &:hover,
+  &:focus {
+    color: #fff !important;
+    background: linear-gradient(
+      90deg,
+      var(--pure-button-primary-gradient-start) 0%,
+      var(--pure-button-primary-gradient-end) 100%
+    ) !important;
+    border-color: transparent !important;
+  }
+}
+
+/* 表格表头背景色 */
+.el-table thead {
+  background-color: var(--pure-table-header-bg) !important;
+
+  th.el-table__cell {
+    background-color: var(--pure-table-header-bg) !important;
+  }
+}
+
+/* 表格行高 - large 类型 */
+.el-table--large,
+.el-table--default,
+.el-table--small {
+  .el-table__cell {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+/* 默认类型的 link 按钮文本颜色设置为黑色 */
+.el-button.is-link:not(
+    .el-button--primary,
+    .el-button--success,
+    .el-button--warning,
+    .el-button--danger,
+    .el-button--info
+  ) {
+  color: #000 !important;
+
+  &:hover,
+  &:focus {
+    color: #000 !important;
+  }
+
+  &:active {
+    color: #000 !important;
+  }
+}
+
+/* 暗色模式下默认 link 按钮文本颜色保持白色 */
+html.dark
+  .el-button.is-link:not(
+    .el-button--primary,
+    .el-button--success,
+    .el-button--warning,
+    .el-button--danger,
+    .el-button--info
+  ) {
+  color: #fff !important;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: #fff !important;
+  }
+}
+
+// 宽度560px的对话框样式，需要调整label宽度
+.width-560px {
+  .el-form-item__label {
+    width: var(--el-form-item-label-width) !important;
+    white-space: nowrap;
+  }
+}
+
+.plus-form-item__label {
+  white-space: nowrap !important;
+}
+
+/* PlusDialogForm 表单组件固定宽度 360px */
+.plus-dialog {
+  // .plus-form-item {
+  //   width: 360px !important;
+  // }
+  .plus-form-item-field {
+    width: 360px !important;
+    font-weight: 400 !important;
+  }
+
+  .plus-form-item__label {
+    font-weight: 400 !important;
+  }
+
+  .el-form-item__content {
+    width: var(--el-form-item__dialog-width) !important;
+    flex: none;
+  }
+
+  .el-input__wrapper,
+  .el-textarea__inner,
+  .el-select .el-input__wrapper,
+  .el-date-picker .el-input__wrapper,
+  .el-time-picker .el-input__wrapper,
+  .el-cascader .el-input__wrapper,
+  .el-input-number .el-input__wrapper {
+    width: var(--el-form-item__dialog-width) !important;
+  }
+}
+
+.plus-dialog-form {
+  .el-form-item__content {
+    flex: none;
+    width: var(--el-form-item__dialog-width) !important;
+  }
+
+  // .plus-form-item {
+  //   width: 360px !important;
+  // }
+  // .plus-form-item-field {
+  //   width: 360px !important;
+  // }
+  .el-input__wrapper,
+  .el-textarea__inner,
+  .el-select .el-input__wrapper,
+  .el-date-picker .el-input__wrapper,
+  .el-time-picker .el-input__wrapper,
+  .el-cascader .el-input__wrapper,
+  .el-input-number .el-input__wrapper {
+    width: var(--el-form-item__dialog-width) !important;
+  }
+}
+
+.is-drawer {
+  .plus-form-item-field {
+    width: var(--el-form-item__drawer-width) !important;
+  }
+
+  .el-input__wrapper,
+  .el-textarea__inner,
+  .el-select .el-input__wrapper,
+  .el-date-picker .el-input__wrapper,
+  .el-time-picker .el-input__wrapper,
+  .el-cascader .el-input__wrapper,
+  .el-input-number .el-input__wrapper {
+    width: var(--el-form-item__drawer-width) !important;
+  }
+}
+
+/* PlusDrawerForm 表单组件固定宽度 300px */
+.plus-drawer-form {
+  .plus-form-item-field {
+    width: var(--el-form-item__drawer-width) !important;
+  }
+
+  .el-input__wrapper,
+  .el-textarea__inner,
+  .el-select .el-input__wrapper,
+  .el-date-picker .el-input__wrapper,
+  .el-time-picker .el-input__wrapper,
+  .el-cascader .el-input__wrapper,
+  .el-input-number .el-input__wrapper {
+    width: var(--el-form-item__drawer-width) !important;
+  }
+}
+
+/* 全局移除 el-link 的下划线 */
+.el-link.is-underline:hover::after,
+.el-link.is-hover-underline:hover::after {
+  border-bottom: none !important;
+}
+
+.el-tabs__nav-wrap::after {
+  background-color: transparent !important;
+}
+
+.el-descriptions__body
+  .el-descriptions__table.is-bordered
+  .el-descriptions__cell {
+  padding: 12px 16px;
+}
+
+.el-descriptions__content.el-descriptions__cell.is-bordered-content {
+  color: #666;
+}

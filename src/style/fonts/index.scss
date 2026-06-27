@@ -1,0 +1,21 @@
+/**
+ * 字体模块入口文件
+ * 导入字体定义并设置默认字体族
+ */
+
+// 导入 Noto Sans SC 字体定义
+@use "noto-sans";
+
+// body {
+//   font-family: "PingFang SC", "Noto Sans SC", sans-serif;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+//   text-rendering: optimizelegibility;
+// }
+
+// input,
+// button,
+// textarea,
+// select {
+//   font-family: "PingFang SC", "Noto Sans SC", sans-serif;
+// }

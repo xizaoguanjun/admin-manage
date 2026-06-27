@@ -1,0 +1,24 @@
+shamefullyHoist: true
+shellEmulator: true
+
+allowBuilds:
+  '@parcel/watcher': true
+  'core-js': true
+  'es5-ext': true
+  'esbuild': true
+  'vue-demi': true
+  'sm-crypto': true
+
+allowedDeprecatedVersions:
+  are-we-there-yet: '*'
+  sourcemap-codec: '*'
+  lodash.isequal: '*'
+  domexception: '*'
+  w3c-hr-time: '*'
+  inflight: '*'
+  npmlog: '*'
+  rimraf: '*'
+  stable: '*'
+  gauge: '*'
+  abab: '*'
+  glob: '*'

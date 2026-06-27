@@ -1,0 +1,55 @@
+/**
+ * Noto Sans SC 字体族定义
+ * 从 CDN 加载字体文件
+ */
+
+// CDN 字体路径 - 从 CSS 变量中读取
+$cdn-fonts: var(--cdn-fonts-url);
+
+/**
+ * Noto Sans SC - Regular (400)
+ * 常规字重，用于正文内容
+ */
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url("https://staticcdn.jinbizhihui.com/fonts/NotoSansSC-Regular.woff2")
+      format("woff2"),
+    url("https://staticcdn.jinbizhihui.com/fonts/NotoSansSC-Regular.ttf")
+      format("truetype");
+  font-display: swap;
+}
+
+/**
+ * Noto Sans SC - Medium (500)
+ * 中等字重，用于副标题和强调文本
+ */
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 500;
+  src:
+    url("https://staticcdn.jinbizhihui.com/fonts/NotoSansSC-Medium.woff2")
+      format("woff2"),
+    url("https://staticcdn.jinbizhihui.com/fonts/NotoSansSC-Medium.ttf")
+      format("truetype");
+  font-display: swap;
+}
+
+/**
+ * Noto Sans SC - Bold (700)
+ * 粗体字重，用于标题和重点强调
+ */
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 700;
+  src:
+    url("https://staticcdn.jinbizhihui.com/fonts/NotoSansSC-Bold.woff2")
+      format("woff2"),
+    url("https://staticcdn.jinbizhihui.com/fonts/NotoSansSC-Bold.ttf")
+      format("truetype");
+  font-display: swap;
+}

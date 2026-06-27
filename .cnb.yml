@@ -1,0 +1,5 @@
+env:
+  REGISTRY_PROJECT: saas-frontend-data-center-admin
+include:
+  - https://cnb.jinbizhihui.com/jinbizhihui/key-file/frontend-yml/-/blob/main/k8s-frontend-deployment.yml
+  - https://cnb.jinbizhihui.com/jinbizhihui/key-file/frontend-yml/-/blob/main/data-center-admin.yml
