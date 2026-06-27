@@ -15,6 +15,14 @@ import {
   isMemoryHigh,
   blobURLManager
 } from "@/utils/memoryManager";
+import {
+  DIRECT_UPLOAD_MAX_SIZE,
+  uploadFile as uploadFileApi,
+  uploadFileChunk,
+  getChunkStatus,
+  mergeFileUpload,
+  type FileItem
+} from "@/api/file";
 
 // 文件上传状态枚举
 export type UploadStatus =
@@ -35,7 +43,7 @@ export interface UploadFile {
   uploadedSize: number;
   currentChunk: number;
   totalChunks: number;
-  targetFolder: string;
+  folderId: number;
   error?: string;
   abortController?: AbortController;
   // 速度和时间预估
@@ -50,23 +58,23 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
   const uploadFiles = ref<UploadFile[]>([]);
   const isModalVisible = ref(false);
   const isMinimized = ref(false); // 新增：最小化状态
-  const currentFolder = ref("设计知识库"); // 默认文件夹
+  const currentFolder = ref<number | null>(null);
 
   // 文件上传完成回调函数列表
   const uploadCompleteCallbacks = ref<
-    Array<(fileName: string, file: File) => void>
+    Array<(fileName: string, file: File, result?: FileItem) => void>
   >([]);
 
   // 方法：注册上传完成回调
   const onUploadComplete = (
-    callback: (fileName: string, file: File) => void
+    callback: (fileName: string, file: File, result?: FileItem) => void
   ) => {
     uploadCompleteCallbacks.value.push(callback);
   };
 
   // 方法：移除上传完成回调
   const offUploadComplete = (
-    callback: (fileName: string, file: File) => void
+    callback: (fileName: string, file: File, result?: FileItem) => void
   ) => {
     const index = uploadCompleteCallbacks.value.indexOf(callback);
     if (index > -1) {
@@ -78,11 +86,11 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
   const triggerUploadComplete = (
     fileName: string,
     file: File,
-    _targetFolder: string
+    result?: FileItem
   ) => {
     uploadCompleteCallbacks.value.forEach(callback => {
       try {
-        callback(fileName, file);
+        callback(fileName, file, result);
       } catch (error) {
         console.error("上传完成回调执行失败:", error);
       }
@@ -142,6 +150,11 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
 
   // 方法：添加文件到上传列表
   const addFiles = async (files: File[]) => {
+    if (currentFolder.value == null) {
+      ElMessage.error("请先选择目标文件夹");
+      return;
+    }
+
     // 上传前验证
     const currentFiles = uploadFiles.value.map(f => f.file);
     const validationResults = await validateFilesBeforeUpload(
@@ -179,7 +192,7 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
     // 验证通过，创建上传文件对象
     const newFiles = files.map(file => {
       const fileId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+      const totalChunks = Math.max(1, Math.ceil(file.size / CHUNK_SIZE));
 
       return {
         id: fileId,
@@ -191,7 +204,7 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
         uploadedSize: 0,
         currentChunk: 0,
         totalChunks,
-        targetFolder: currentFolder.value,
+        folderId: currentFolder.value!,
         abortController: new AbortController()
       };
     });
@@ -228,21 +241,58 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
   const uploadFile = async (fileItem: UploadFile) => {
     fileItem.status = "uploading";
 
-    // 初始化速度计算器
     const speedCalculator = speedCalculatorManager.getCalculator(fileItem.id);
     if (fileItem.currentChunk === 0) {
-      // 新上传，重新开始计算
       speedCalculator.start(fileItem.file.size);
     }
 
     try {
-      // 分片上传逻辑
+      // 小文件直接上传
+      if (fileItem.file.size <= DIRECT_UPLOAD_MAX_SIZE) {
+        const res = await uploadFileApi(fileItem.file, fileItem.folderId);
+        if (res.code !== "00000") {
+          throw new Error(res.message || "上传失败");
+        }
+        fileItem.status = "completed";
+        fileItem.progress = 100;
+        speedCalculatorManager.removeCalculator(fileItem.id);
+        triggerUploadComplete(fileItem.name, fileItem.file, res.data);
+        const nextFile = uploadFiles.value.find(f => f.status === "waiting");
+        if (nextFile) uploadFile(nextFile);
+        return;
+      }
+
+      // 大文件：断点续传检查
+      if (fileItem.currentChunk === 0) {
+        try {
+          const statusRes = await getChunkStatus(
+            fileItem.id,
+            fileItem.totalChunks
+          );
+          if (
+            statusRes.code === "00000" &&
+            statusRes.data.uploadedChunks.length > 0
+          ) {
+            const maxChunk = Math.max(...statusRes.data.uploadedChunks) + 1;
+            fileItem.currentChunk = maxChunk;
+            fileItem.uploadedSize = Math.min(
+              maxChunk * CHUNK_SIZE,
+              fileItem.file.size
+            );
+            fileItem.progress = Math.round(
+              (fileItem.uploadedSize / fileItem.file.size) * 100
+            );
+          }
+        } catch {
+          // 忽略状态查询失败，从头开始
+        }
+      }
+
       for (
         let chunkIndex = fileItem.currentChunk;
         chunkIndex < fileItem.totalChunks;
         chunkIndex++
       ) {
-        // 检查是否被暂停（重新读取状态，因为可能被外部修改）
         if ((fileItem as UploadFile).status === "paused") {
           return;
         }
@@ -251,17 +301,14 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
         const end = Math.min(start + CHUNK_SIZE, fileItem.file.size);
         const chunk = fileItem.file.slice(start, end);
 
-        // 上传分片
         await uploadChunk(fileItem, chunk, chunkIndex);
 
-        // 更新进度
         fileItem.currentChunk = chunkIndex + 1;
         fileItem.uploadedSize = end;
         fileItem.progress = Math.round(
           (fileItem.uploadedSize / fileItem.file.size) * 100
         );
 
-        // 更新速度信息
         speedCalculator.addPoint(fileItem.uploadedSize);
         const currentSpeed = speedCalculator.getCurrentSpeed();
         const remainingTime = speedCalculator.getRemainingTime(
@@ -276,26 +323,25 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
           UploadSpeedCalculator.formatRemainingTime(remainingTime);
       }
 
-      // 完成上传
       if (fileItem.currentChunk >= fileItem.totalChunks) {
+        const mergeRes = await mergeFileUpload({
+          fileId: fileItem.id,
+          fileName: fileItem.name,
+          totalChunks: fileItem.totalChunks,
+          folderId: fileItem.folderId,
+          mimeType: fileItem.file.type || undefined
+        });
+        if (mergeRes.code !== "00000") {
+          throw new Error(mergeRes.message || "合并失败");
+        }
+
         fileItem.status = "completed";
         fileItem.progress = 100;
-
-        // 清理速度计算器
         speedCalculatorManager.removeCalculator(fileItem.id);
+        triggerUploadComplete(fileItem.name, fileItem.file, mergeRes.data);
 
-        // 触发上传完成事件
-        triggerUploadComplete(
-          fileItem.name,
-          fileItem.file,
-          fileItem.targetFolder
-        );
-
-        // 继续处理队列中的下一个文件
         const nextFile = uploadFiles.value.find(f => f.status === "waiting");
-        if (nextFile) {
-          uploadFile(nextFile);
-        }
+        if (nextFile) uploadFile(nextFile);
       }
     } catch (error) {
       // 清理速度计算器
@@ -325,66 +371,30 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
 
   // 方法：上传分片（简化版本，实际项目中需要替换为真实的API调用）
   const uploadChunk = async (
-    uploadFile: UploadFile,
+    uploadFileItem: UploadFile,
     chunk: Blob,
     chunkIndex: number
   ): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      // 检查是否被中断
-      if (uploadFile.abortController?.signal.aborted) {
-        reject(new Error("上传已取消"));
-        return;
-      }
+    if (uploadFileItem.abortController?.signal.aborted) {
+      throw new Error("上传已取消");
+    }
 
-      // 内存检查：如果内存使用过高，暂停一下让垃圾回收
-      if (isMemoryHigh(85)) {
-        console.warn("[内存优化] 内存使用过高，暂停100ms等待垃圾回收");
-        setTimeout(() => {
-          // 继续上传
-        }, 100);
-      }
+    if (isMemoryHigh(85)) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
 
-      // 模拟网络延迟（500-1500ms）
-      const delay = Math.random() * 1000 + 500;
-
-      const timeoutId = setTimeout(() => {
-        // 模拟1%的网络错误概率
-        if (Math.random() < 0.01) {
-          reject(new Error("网络连接失败，请重试"));
-          return;
-        }
-
-        // 更新进度
-        const chunkProgress = ((chunkIndex + 1) / uploadFile.totalChunks) * 100;
-        uploadFile.progress = Math.round(chunkProgress);
-
-        console.log(
-          `✅ 文件 ${uploadFile.name} 分片 ${chunkIndex + 1}/${uploadFile.totalChunks} 上传成功`
-        );
-        resolve();
-      }, delay);
-
-      // 监听中断信号
-      uploadFile.abortController?.signal.addEventListener("abort", () => {
-        clearTimeout(timeoutId);
-        reject(new Error("上传已取消"));
-      });
-
-      // TODO: 在实际项目中，这里应该调用真实的API上传接口
-      // 示例：
-      // const formData = new FormData();
-      // formData.append("file", chunk);
-      // formData.append("fileName", uploadFile.name);
-      // formData.append("chunkIndex", chunkIndex.toString());
-      // formData.append("totalChunks", uploadFile.totalChunks.toString());
-      // formData.append("fileId", uploadFile.id);
-      //
-      // axios.post('/api/upload/chunk', formData, {
-      //   signal: uploadFile.abortController?.signal
-      // })
-      // .then(() => resolve())
-      // .catch((error) => reject(error));
-    });
+    await uploadFileChunk(
+      chunk,
+      {
+        fileId: uploadFileItem.id,
+        fileName: uploadFileItem.name,
+        chunkIndex,
+        totalChunks: uploadFileItem.totalChunks,
+        folderId: uploadFileItem.folderId,
+        mimeType: uploadFileItem.file.type || undefined
+      },
+      uploadFileItem.abortController?.signal
+    );
   };
 
   // 方法：暂停上传
@@ -471,8 +481,8 @@ export const useFileUploadStore = defineStore("fileUpload", () => {
   };
 
   // 方法：设置当前文件夹
-  const setCurrentFolder = (folderName: string) => {
-    currentFolder.value = folderName;
+  const setCurrentFolder = (folderId: number | null) => {
+    currentFolder.value = folderId;
   };
 
   // 方法：格式化文件大小

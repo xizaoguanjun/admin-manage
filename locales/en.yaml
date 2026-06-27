@@ -70,6 +70,7 @@ menus:
   pureDept: Dept Manage
   pureSysMonitor: System Monitor
   userManagement: User Management
+  fileManagement: File Management
   pureOnlineUser: Online User
   pureLoginLog: Login Log
   pureOperationLog: Operation Log
